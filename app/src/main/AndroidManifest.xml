@@ -22,7 +22,14 @@
 
         </activity>
 
-        <activity android:name=".ui.UIAdaptActivity"/>
+        <activity android:name=".ui.UIOptActivity"
+            android:screenOrientation="portrait"/>
+
+        <activity android:name=".ui.UIAdaptDensityActivity"
+            android:screenOrientation="portrait"/>
+
+        <activity android:name=".ui.UIAdaptSWActivity"
+            android:screenOrientation="portrait"/>
 
     </application>
 

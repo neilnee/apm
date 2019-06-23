@@ -5,7 +5,7 @@ import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
 
-import com.tinycold.apm.ui.UIAdaptActivity;
+import com.tinycold.apm.ui.UIOptActivity;
 
 public class MainActivity extends BaseActivity implements View.OnClickListener {
 
@@ -39,7 +39,7 @@ public class MainActivity extends BaseActivity implements View.OnClickListener {
     public void onClick(View view) {
         switch (view.getId()) {
             case R.id.btn_ui: {
-                startActivity(new Intent(MainActivity.this, UIAdaptActivity.class));
+                startActivity(new Intent(MainActivity.this, UIOptActivity.class));
                 break;
             }
             case R.id.btn_io: {
