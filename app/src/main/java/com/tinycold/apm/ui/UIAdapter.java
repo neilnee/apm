@@ -51,6 +51,7 @@ public class UIAdapter {
 
     /**
      * 重置回系统的density参数
+     * 修改density等操作会影响应用全局的density相关值，因此考虑以activity为粒度进行修改适配
      */
     public static void resetDensity(@NonNull Activity activity, @NonNull final Application application) {
         if (sDeviceDensity > 0 && sDeviceDensityDpi > 0 && sDeviceScaleDensity > 0) {
