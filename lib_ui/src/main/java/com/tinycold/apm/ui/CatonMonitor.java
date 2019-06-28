@@ -53,6 +53,7 @@ public class CatonMonitor {
             case MONITOR_MSG: {
                 if (!(mChecker instanceof CheckerV2)) {
                     mChecker = new CheckerV2(mSummary);
+                    mChecker.start();
                 }
                 break;
             }
@@ -82,6 +83,7 @@ public class CatonMonitor {
     }
 
     private static abstract class Checker {
+        protected final int CATON_INTERVAL = 1000;
         protected final CatonSummary mSummary;
         protected Checker(@NonNull CatonSummary summary) {
             mSummary = summary;
@@ -91,7 +93,6 @@ public class CatonMonitor {
     }
 
     private static class CheckerV1 extends Checker {
-        private final int CATON_INTERVAL = 600;
         private final HandlerThread mHandlerThread = new HandlerThread("CheckerV1");
         private final Handler mHandler;
         private final Runnable mRun = new Runnable() {
@@ -128,19 +129,78 @@ public class CatonMonitor {
 
     private static class CheckerV2 extends Checker {
 
+        private final Handler mMainHandler;
+        private CheckerV2Run mRun = null;
+        private Thread mThread = null;
+
         protected CheckerV2(@NonNull CatonSummary summary) {
             super(summary);
+            mMainHandler = new Handler(Looper.getMainLooper());
         }
 
         @Override
         protected void start() {
-
+            if (mThread != null || mRun != null) {
+                end();
+            }
+            if (mThread == null) {
+                mRun = new CheckerV2Run(mMainHandler, mSummary);
+                mThread = new Thread(mRun);
+                mThread.start();
+            }
         }
 
         @Override
         protected void end() {
-
+            if (mRun != null) {
+                mRun.end();
+                mRun = null;
+            }
+            if (mThread != null) {
+                mThread.interrupt();
+                mThread = null;
+            }
         }
+    }
+
+    private static class CheckerV2Run implements Runnable {
+        private boolean isInterrupt = false;
+        private Handler mMainHandler;
+        private CatonSummary mSummary;
+        private static final int MSG_UI_EMPTY = 999;
+        private int mLastMin = 0;
+
+        private CheckerV2Run(@NonNull Handler handler, @NonNull CatonSummary summary) {
+            mMainHandler = handler;
+            mSummary = summary;
+        }
+
+        @Override
+        public void run() {
+            while (!isInterrupt) {
+                try {
+                    Thread.sleep(1000);
+                } catch (InterruptedException e) {
+                    e.printStackTrace();
+                }
+                if (!mMainHandler.hasMessages(MSG_UI_EMPTY)) {
+                    if (mLastMin > 0) {
+                        mSummary.mCatonTimes++;
+                        mSummary.mCatonDuration += mLastMin * 1000;
+                        mLastMin = 0;
+                    }
+                    mMainHandler.sendEmptyMessage(MSG_UI_EMPTY);
+                    continue;
+                }
+                mLastMin++;
+            }
+        }
+
+        public void end() {
+            isInterrupt = true;
+            mSummary = null;
+        }
+
     }
 
 }

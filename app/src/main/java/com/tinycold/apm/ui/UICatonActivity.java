@@ -40,7 +40,8 @@ public class UICatonActivity extends BaseActivity implements View.OnClickListene
     public void onClick(View view) {
         switch (view.getId()) {
             case R.id.btn_ui_caton_start: {
-                CatonMonitor.start(CatonMonitor.MONITOR_LOG);
+//                CatonMonitor.start(CatonMonitor.MONITOR_LOG);
+                CatonMonitor.start(CatonMonitor.MONITOR_MSG);
                 APMLog.debug("监控启动");
                 break;
             }
