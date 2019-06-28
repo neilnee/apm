@@ -64,9 +64,8 @@ public class UICatonActivity extends BaseActivity implements View.OnClickListene
                 break;
             }
             case R.id.btn_ui_caton_summary: {
-                CatonSummary summary = CatonMonitor.summary();
                 APMLog.debug(String.format(Locale.getDefault(), "卡顿次数: %d; 卡顿时长: %d",
-                        summary.mCatonTimes, summary.mCatonDuration));
+                        CatonMonitor.summary().mCatonTimes, CatonMonitor.summary().mCatonDuration));
                 break;
             }
         }

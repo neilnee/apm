@@ -67,19 +67,16 @@ public class CatonMonitor {
                 break;
             }
             case MONITOR_MSG: {
+                mChecker.end();
                 break;
             }
         }
         mChecker = null;
+        mWay = 0;
     }
 
-    public static CatonSummary summary() {
-        switch (mWay) {
-            case MONITOR_LOG: {
-                break;
-            }
-        }
-        return mChecker.mSummary;
+    public static @NonNull CatonSummary summary() {
+        return mSummary;
     }
 
     private static abstract class Checker {
