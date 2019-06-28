@@ -31,6 +31,9 @@
         <activity android:name=".ui.UIAdaptSWActivity"
             android:screenOrientation="portrait"/>
 
+        <activity android:name=".ui.UICatonActivity"
+            android:screenOrientation="portrait"/>
+
     </application>
 
 

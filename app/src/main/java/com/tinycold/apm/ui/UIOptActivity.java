@@ -18,9 +18,11 @@ public class UIOptActivity extends BaseActivity implements View.OnClickListener 
 
         Button btnAdaptSW = findViewById(R.id.btn_adapt_sw);
         Button btnAdaptDensity = findViewById(R.id.btn_adapt_density);
+        Button btnCatonMonitor = findViewById(R.id.btn_caton_monitor);
 
         btnAdaptSW.setOnClickListener(this);
         btnAdaptDensity.setOnClickListener(this);
+        btnCatonMonitor.setOnClickListener(this);
     }
 
     @Override
@@ -37,6 +39,10 @@ public class UIOptActivity extends BaseActivity implements View.OnClickListener 
             }
             case R.id.btn_adapt_density: {
                 startActivity(new Intent(UIOptActivity.this, UIAdaptDensityActivity.class));
+                break;
+            }
+            case R.id.btn_caton_monitor: {
+                startActivity(new Intent(UIOptActivity.this, UICatonActivity.class));
                 break;
             }
         }

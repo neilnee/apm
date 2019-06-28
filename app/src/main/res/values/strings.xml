@@ -4,8 +4,13 @@
     <string name="btn_ui">UI 优化</string>
     <string name="btn_ui_left">左按钮</string>
     <string name="btn_ui_right">右按钮</string>
-    <string name="btn_ui_adapt_sw">最小宽度限制符方案</string>
-    <string name="btn_ui_adapt_density">修改density方案</string>
+    <string name="btn_ui_adapt_sw">最小宽度限制符适配方案</string>
+    <string name="btn_ui_adapt_density">修改density适配方案</string>
+    <string name="btn_ui_caton">UI卡顿监控</string>
+    <string name="btn_ui_caton_start">启动监控</string>
+    <string name="btn_ui_caton_end">结束监控</string>
+    <string name="btn_ui_caton_fake">模拟卡顿</string>
+    <string name="btn_ui_caton_summary">结果统计</string>
 
     <string name="btn_io">I/O 优化</string>
 </resources>
