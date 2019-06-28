@@ -1,5 +1,8 @@
 package com.tinycold.apm.ui;
 
+/**
+ * 卡顿概况
+ */
 public class CatonSummary {
     /**
      * 卡顿次数

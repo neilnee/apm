@@ -8,6 +8,9 @@ import android.util.DisplayMetrics;
 
 import androidx.annotation.NonNull;
 
+/**
+ * UI适配
+ */
 public class UIAdapter {
 
     private static float sDeviceDensity;

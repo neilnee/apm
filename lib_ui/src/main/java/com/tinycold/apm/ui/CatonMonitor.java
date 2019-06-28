@@ -7,6 +7,9 @@ import android.util.Printer;
 
 import androidx.annotation.NonNull;
 
+/**
+ * 卡顿监控
+ */
 public class CatonMonitor {
     /**
      * 使用Looper中的log日志监控方案
