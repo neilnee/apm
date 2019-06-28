@@ -6,38 +6,70 @@ import android.os.Looper;
 import android.util.Printer;
 
 public class CatonMonitor {
+    /**
+     * 使用Looper中的log日志监控方案
+     */
+    public static final int MONITOR_LOG = 1;
+    /**
+     * 使用空msg方案
+     */
+    public static final int MONITOR_MSG = 2;
 
-    private static final Checker mChecker = new Checker();
+    private static final CheckerV1 mCheckerV1 = new CheckerV1();
+    private static int mWay = 0;
 
-    public static void start() {
-        Looper.getMainLooper().setMessageLogging(new Printer() {
-            private final String START = ">>>>> Dispatching to";
-            private final String FINISH = "<<<<< Finished to";
+    public static void start(int way) {
+        if (mWay == way) {
+            return;
+        }
+        if (mWay != 0) {
+            end();
+        }
+        mWay = way;
+        switch (mWay) {
+            case MONITOR_LOG: {
+                Looper.getMainLooper().setMessageLogging(new Printer() {
+                    private final String START = ">>>>> Dispatching to";
+                    private final String FINISH = "<<<<< Finished to";
 
-            @Override
-            public void println(String s) {
-                if (s.startsWith(START)) {
-                    mChecker.start();
-                } else if (s.startsWith(FINISH)) {
-                    mChecker.end();
-                }
+                    @Override
+                    public void println(String s) {
+                        if (s.startsWith(START)) {
+                            mCheckerV1.start();
+                        } else if (s.startsWith(FINISH)) {
+                            mCheckerV1.end();
+                        }
+                    }
+
+                });
+                break;
             }
+            case MONITOR_MSG: {
 
-        });
+            }
+        }
     }
 
     public static void end() {
-        Looper.getMainLooper().setMessageLogging(null);
+        switch (mWay) {
+            case MONITOR_LOG: {
+                Looper.getMainLooper().setMessageLogging(null);
+                break;
+            }
+            case MONITOR_MSG: {
+                break;
+            }
+        }
     }
 
-    public static CatonDetail summary() {
-        return mChecker.mDetail;
+    public static CatonSummary summary() {
+        return mCheckerV1.mDetail;
     }
 
-    private static class Checker {
+    private static class CheckerV1 {
         private final int CATON_INTERVAL = 600;
-        private final CatonDetail mDetail = new CatonDetail();
-        private final HandlerThread mHandlerThread = new HandlerThread("Checker");
+        private final CatonSummary mDetail = new CatonSummary();
+        private final HandlerThread mHandlerThread = new HandlerThread("CheckerV1");
         private final Handler mHandler;
         private final Runnable mRun = new Runnable() {
             @Override
@@ -49,7 +81,7 @@ public class CatonMonitor {
 
         private long mCheckStart = 0;
 
-        public Checker() {
+        public CheckerV1() {
             mHandlerThread.start();
             mHandler = new Handler(mHandlerThread.getLooper());
         }
@@ -70,15 +102,8 @@ public class CatonMonitor {
 
     }
 
-    public static class CatonDetail {
-        /**
-         * 卡顿次数
-         */
-        public int mCatonTimes = 0;
-        /**
-         * 卡顿时长
-         */
-        public int mCatonDuration = 0;
+    private static class CheckerV2 {
+        
     }
 
 }

@@ -40,7 +40,7 @@ public class UICatonActivity extends BaseActivity implements View.OnClickListene
     public void onClick(View view) {
         switch (view.getId()) {
             case R.id.btn_ui_caton_start: {
-                CatonMonitor.start();
+                CatonMonitor.start(CatonMonitor.MONITOR_LOG);
                 APMLog.debug("监控启动");
                 break;
             }
@@ -63,7 +63,7 @@ public class UICatonActivity extends BaseActivity implements View.OnClickListene
                 break;
             }
             case R.id.btn_ui_caton_summary: {
-                CatonMonitor.CatonDetail summary = CatonMonitor.summary();
+                CatonSummary summary = CatonMonitor.summary();
                 APMLog.debug(String.format(Locale.getDefault(), "卡顿次数: %d; 卡顿时长: %d",
                         summary.mCatonTimes, summary.mCatonDuration));
                 break;
