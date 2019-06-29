@@ -6,7 +6,7 @@ import android.widget.Button;
 
 import com.tinycold.apm.BaseActivity;
 import com.tinycold.apm.R;
-import com.tinycold.apm.tool.APMLog;
+import com.tinycold.tool.TCLog;
 
 import java.util.Locale;
 import java.util.Random;
@@ -42,21 +42,21 @@ public class UICatonActivity extends BaseActivity implements View.OnClickListene
             case R.id.btn_ui_caton_start: {
 //                CatonMonitor.start(CatonMonitor.MONITOR_LOG);
                 CatonMonitor.start(CatonMonitor.MONITOR_MSG);
-                APMLog.debug("监控启动");
+                TCLog.debug("监控启动");
                 break;
             }
             case R.id.btn_ui_caton_end: {
                 CatonMonitor.end();
-                APMLog.debug("监控停止");
+                TCLog.debug("监控停止");
                 break;
             }
             case R.id.btn_ui_caton_fake: {
                 try {
                     int interval = mRandom.nextInt(3000);
-                    APMLog.debug(String.format(Locale.getDefault(), "卡顿模拟开始[%d][%d]",
+                    TCLog.debug(String.format(Locale.getDefault(), "卡顿模拟开始[%d][%d]",
                             interval, System.currentTimeMillis()));
                     Thread.sleep(interval);
-                    APMLog.debug(String.format(Locale.getDefault(), "卡顿模拟结束[%d][%d]",
+                    TCLog.debug(String.format(Locale.getDefault(), "卡顿模拟结束[%d][%d]",
                             interval, System.currentTimeMillis()));
                 } catch (InterruptedException e) {
                     e.printStackTrace();
@@ -64,7 +64,7 @@ public class UICatonActivity extends BaseActivity implements View.OnClickListene
                 break;
             }
             case R.id.btn_ui_caton_summary: {
-                APMLog.debug(String.format(Locale.getDefault(), "卡顿次数: %d; 卡顿时长: %d",
+                TCLog.debug(String.format(Locale.getDefault(), "卡顿次数: %d; 卡顿时长: %d",
                         CatonMonitor.summary().mCatonTimes, CatonMonitor.summary().mCatonDuration));
                 break;
             }

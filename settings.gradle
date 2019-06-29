@@ -1,1 +1,1 @@
-include ':app', ':tool_sw', ':lib_ui'
+include ':app', ':lib_tool_sw', ':lib_ui', ':lib_tool'
