@@ -43,8 +43,8 @@ public class UICatonActivity extends BaseActivity implements View.OnClickListene
     public void onClick(View view) {
         switch (view.getId()) {
             case R.id.btn_ui_caton_start: {
-//                RenderMonitor.monitorCaton(RenderMonitor.MONITOR_CATON_BY_LOG);
-                RenderMonitor.monitorCaton(RenderMonitor.MONITOR_CATON_BY_MSG);
+                RenderMonitor.monitorCaton(RenderMonitor.MONITOR_CATON_BY_LOG);
+//                RenderMonitor.monitorCaton(RenderMonitor.MONITOR_CATON_BY_MSG);
                 TCLog.debug("监控启动");
                 break;
             }

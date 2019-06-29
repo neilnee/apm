@@ -89,8 +89,25 @@ public class RenderMonitor {
         mCatonWay = 0;
     }
 
+    /**
+     * 获取卡顿监控信息
+     */
     public static @NonNull CatonSummary catonSummary() {
         return mCatonSummary;
+    }
+
+    /**
+     * 启动帧率监控
+     */
+    public static void monitorFrame() {
+
+    }
+
+    /**
+     * 停止帧率监控
+     */
+    public static void endFrame() {
+
     }
 
     private static abstract class CatonChecker {
@@ -109,8 +126,7 @@ public class RenderMonitor {
         private final Runnable mRun = new Runnable() {
             @Override
             public void run() {
-                // 执行卡顿时的统计
-                mSummary.increaseTimes();
+                // 出现卡顿的实时监控点
             }
         };
 
@@ -131,7 +147,7 @@ public class RenderMonitor {
             if (mHandler.hasCallbacks(mRun)) {
                 mHandler.removeCallbacks(mRun);
             } else if (mCheckStart > 0) {
-                mSummary.increaseDuration(System.currentTimeMillis() - mCheckStart);
+                mSummary.update(System.currentTimeMillis() - mCheckStart);
             }
             mCheckStart = 0;
         }
@@ -196,8 +212,7 @@ public class RenderMonitor {
                 }
                 if (!mMainHandler.hasMessages(MSG_UI_EMPTY)) {
                     if (mLastMin > 0) {
-                        mSummary.increaseTimes();
-                        mSummary.increaseDuration(mLastMin * 1000);
+                        mSummary.update(mLastMin * 1000);
                         mLastMin = 0;
                     }
                     mMainHandler.sendEmptyMessage(MSG_UI_EMPTY);

@@ -13,20 +13,23 @@ public class CatonSummary {
      */
     private long mCatonDuration = 0;
 
-    public void increaseTimes() {
-        mCatonTimes++;
-    }
-
-    public void increaseDuration(long d) {
-        mCatonDuration += d;
+    public void update(long duration) {
+        synchronized (this) {
+            mCatonTimes++;
+            mCatonDuration += duration;
+        }
     }
 
     public int times() {
-        return mCatonTimes;
+        synchronized (this) {
+            return mCatonTimes;
+        }
     }
 
     public long duration() {
-        return mCatonDuration;
+        synchronized (this) {
+            return mCatonDuration;
+        }
     }
 
 }
