@@ -43,13 +43,13 @@ public class UICatonActivity extends BaseActivity implements View.OnClickListene
     public void onClick(View view) {
         switch (view.getId()) {
             case R.id.btn_ui_caton_start: {
-//                CatonMonitor.start(CatonMonitor.MONITOR_LOG);
-                CatonMonitor.start(CatonMonitor.MONITOR_MSG);
+//                RenderMonitor.monitorCaton(RenderMonitor.MONITOR_CATON_BY_LOG);
+                RenderMonitor.monitorCaton(RenderMonitor.MONITOR_CATON_BY_MSG);
                 TCLog.debug("监控启动");
                 break;
             }
             case R.id.btn_ui_caton_end: {
-                CatonMonitor.end();
+                RenderMonitor.endCaton();
                 TCLog.debug("监控停止");
                 break;
             }
@@ -68,7 +68,7 @@ public class UICatonActivity extends BaseActivity implements View.OnClickListene
             }
             case R.id.btn_ui_caton_summary: {
                 TCLog.debug(String.format(Locale.getDefault(), "卡顿次数: %d; 卡顿时长: %d",
-                        CatonMonitor.summary().mCatonTimes, CatonMonitor.summary().mCatonDuration));
+                        RenderMonitor.catonSummary().times(), RenderMonitor.catonSummary().duration()));
                 break;
             }
         }

@@ -10,32 +10,40 @@ import androidx.annotation.NonNull;
 /**
  * 卡顿监控
  */
-public class CatonMonitor {
+public class RenderMonitor {
     /**
-     * 使用Looper中的log日志监控方案
+     * 使用Looper中log日志方案进行卡顿监控
      */
-    public static final int MONITOR_LOG = 1;
+    public static final int MONITOR_CATON_BY_LOG = 1;
     /**
-     * 使用空msg方案
+     * 使用空msg方案进行卡顿监控
      */
-    public static final int MONITOR_MSG = 2;
+    public static final int MONITOR_CATON_BY_MSG = 2;
 
-    private static final CatonSummary mSummary = new CatonSummary();
-    private static Checker mChecker = null;
-    private static int mWay = 0;
+    // 卡顿监控相关
+    private static final CatonSummary mCatonSummary = new CatonSummary();
+    private static CatonChecker mCatonChecker = null;
+    private static int mCatonWay = 0;
 
-    public static void start(int way) {
-        if (mWay == way) {
+    // 帧率监控相关
+    private static final FrameSummary mFrameSummary = new FrameSummary();
+
+    /**
+     * 启动卡顿监控
+     * @param way 监控方案
+     */
+    public static void monitorCaton(int way) {
+        if (mCatonWay == way) {
             return;
         }
-        if (mWay != 0) {
-            end();
+        if (mCatonWay != 0) {
+            endCaton();
         }
-        mWay = way;
-        switch (mWay) {
-            case MONITOR_LOG: {
-                if (!(mChecker instanceof CheckerV1)) {
-                    mChecker = new CheckerV1(mSummary);
+        mCatonWay = way;
+        switch (mCatonWay) {
+            case MONITOR_CATON_BY_LOG: {
+                if (!(mCatonChecker instanceof CatonCheckerV1)) {
+                    mCatonChecker = new CatonCheckerV1(mCatonSummary);
                 }
                 Looper.getMainLooper().setMessageLogging(new Printer() {
                     private final String START = ">>>>> Dispatching to";
@@ -44,68 +52,71 @@ public class CatonMonitor {
                     @Override
                     public void println(String s) {
                         if (s.startsWith(START)) {
-                            mChecker.start();
+                            mCatonChecker.start();
                         } else if (s.startsWith(FINISH)) {
-                            mChecker.end();
+                            mCatonChecker.end();
                         }
                     }
 
                 });
                 break;
             }
-            case MONITOR_MSG: {
-                if (!(mChecker instanceof CheckerV2)) {
-                    mChecker = new CheckerV2(mSummary);
-                    mChecker.start();
+            case MONITOR_CATON_BY_MSG: {
+                if (!(mCatonChecker instanceof CatonCheckerV2)) {
+                    mCatonChecker = new CatonCheckerV2(mCatonSummary);
+                    mCatonChecker.start();
                 }
                 break;
             }
         }
     }
 
-    public static void end() {
-        switch (mWay) {
-            case MONITOR_LOG: {
+    /**
+     * 停止卡顿监控
+     */
+    public static void endCaton() {
+        switch (mCatonWay) {
+            case MONITOR_CATON_BY_LOG: {
                 Looper.getMainLooper().setMessageLogging(null);
                 break;
             }
-            case MONITOR_MSG: {
-                mChecker.end();
+            case MONITOR_CATON_BY_MSG: {
+                mCatonChecker.end();
                 break;
             }
         }
-        mChecker = null;
-        mWay = 0;
+        mCatonChecker = null;
+        mCatonWay = 0;
     }
 
-    public static @NonNull CatonSummary summary() {
-        return mSummary;
+    public static @NonNull CatonSummary catonSummary() {
+        return mCatonSummary;
     }
 
-    private static abstract class Checker {
+    private static abstract class CatonChecker {
         protected final int CATON_INTERVAL = 1000;
         protected final CatonSummary mSummary;
-        protected Checker(@NonNull CatonSummary summary) {
+        protected CatonChecker(@NonNull CatonSummary summary) {
             mSummary = summary;
         }
         protected abstract void start();
         protected abstract void end();
     }
 
-    private static class CheckerV1 extends Checker {
-        private final HandlerThread mHandlerThread = new HandlerThread("CheckerV1");
+    private static class CatonCheckerV1 extends CatonChecker {
+        private final HandlerThread mHandlerThread = new HandlerThread("CatonCheckerV1");
         private final Handler mHandler;
         private final Runnable mRun = new Runnable() {
             @Override
             public void run() {
                 // 执行卡顿时的统计
-                mSummary.mCatonTimes++;
+                mSummary.increaseTimes();
             }
         };
 
         private long mCheckStart = 0;
 
-        public CheckerV1(@NonNull CatonSummary summary) {
+        public CatonCheckerV1(@NonNull CatonSummary summary) {
             super(summary);
             mHandlerThread.start();
             mHandler = new Handler(mHandlerThread.getLooper());
@@ -120,20 +131,20 @@ public class CatonMonitor {
             if (mHandler.hasCallbacks(mRun)) {
                 mHandler.removeCallbacks(mRun);
             } else if (mCheckStart > 0) {
-                mSummary.mCatonDuration += System.currentTimeMillis() - mCheckStart;
+                mSummary.increaseDuration(System.currentTimeMillis() - mCheckStart);
             }
             mCheckStart = 0;
         }
 
     }
 
-    private static class CheckerV2 extends Checker {
+    private static class CatonCheckerV2 extends CatonChecker {
 
         private final Handler mMainHandler;
-        private CheckerV2Run mRun = null;
+        private CatonCheckerV2Run mRun = null;
         private Thread mThread = null;
 
-        protected CheckerV2(@NonNull CatonSummary summary) {
+        protected CatonCheckerV2(@NonNull CatonSummary summary) {
             super(summary);
             mMainHandler = new Handler(Looper.getMainLooper());
         }
@@ -144,7 +155,7 @@ public class CatonMonitor {
                 end();
             }
             if (mThread == null) {
-                mRun = new CheckerV2Run(mMainHandler, mSummary);
+                mRun = new CatonCheckerV2Run(mMainHandler, mSummary);
                 mThread = new Thread(mRun);
                 mThread.start();
             }
@@ -163,14 +174,14 @@ public class CatonMonitor {
         }
     }
 
-    private static class CheckerV2Run implements Runnable {
+    private static class CatonCheckerV2Run implements Runnable {
         private boolean isInterrupt = false;
         private Handler mMainHandler;
         private CatonSummary mSummary;
         private static final int MSG_UI_EMPTY = 999;
         private int mLastMin = 0;
 
-        private CheckerV2Run(@NonNull Handler handler, @NonNull CatonSummary summary) {
+        private CatonCheckerV2Run(@NonNull Handler handler, @NonNull CatonSummary summary) {
             mMainHandler = handler;
             mSummary = summary;
         }
@@ -185,8 +196,8 @@ public class CatonMonitor {
                 }
                 if (!mMainHandler.hasMessages(MSG_UI_EMPTY)) {
                     if (mLastMin > 0) {
-                        mSummary.mCatonTimes++;
-                        mSummary.mCatonDuration += mLastMin * 1000;
+                        mSummary.increaseTimes();
+                        mSummary.increaseDuration(mLastMin * 1000);
                         mLastMin = 0;
                     }
                     mMainHandler.sendEmptyMessage(MSG_UI_EMPTY);

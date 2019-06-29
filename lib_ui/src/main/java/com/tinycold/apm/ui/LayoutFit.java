@@ -11,7 +11,7 @@ import androidx.annotation.NonNull;
 /**
  * UI适配
  */
-public class UIAdapter {
+public class LayoutFit {
 
     private static float sDeviceDensity;
     private static float sDeviceScaleDensity;

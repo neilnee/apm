@@ -7,10 +7,26 @@ public class CatonSummary {
     /**
      * 卡顿次数
      */
-    public int mCatonTimes = 0;
+    private int mCatonTimes = 0;
     /**
      * 卡顿时长
      */
-    public int mCatonDuration = 0;
+    private long mCatonDuration = 0;
+
+    public void increaseTimes() {
+        mCatonTimes++;
+    }
+
+    public void increaseDuration(long d) {
+        mCatonDuration += d;
+    }
+
+    public int times() {
+        return mCatonTimes;
+    }
+
+    public long duration() {
+        return mCatonDuration;
+    }
 
 }
