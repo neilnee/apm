@@ -5,6 +5,9 @@ import android.os.Bundle;
 import com.tinycold.apm.BaseActivity;
 import com.tinycold.apm.R;
 
+/**
+ * 使用修改density方案的UI适配
+ */
 public class UIAdaptDensityActivity extends BaseActivity {
 
     @Override

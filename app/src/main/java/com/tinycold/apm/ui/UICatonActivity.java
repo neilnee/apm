@@ -11,6 +11,9 @@ import com.tinycold.tool.TCLog;
 import java.util.Locale;
 import java.util.Random;
 
+/**
+ * UI卡顿监控
+ */
 public class UICatonActivity extends BaseActivity implements View.OnClickListener {
 
     private final Random mRandom = new Random();

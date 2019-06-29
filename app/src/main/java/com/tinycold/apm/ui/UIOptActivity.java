@@ -9,6 +9,9 @@ import com.tinycold.apm.BaseActivity;
 import com.tinycold.apm.MainActivity;
 import com.tinycold.apm.R;
 
+/**
+ * UI优化引导页面
+ */
 public class UIOptActivity extends BaseActivity implements View.OnClickListener {
 
     @Override

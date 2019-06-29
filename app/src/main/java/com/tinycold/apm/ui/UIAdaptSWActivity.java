@@ -5,6 +5,9 @@ import android.os.Bundle;
 import com.tinycold.apm.BaseActivity;
 import com.tinycold.apm.R;
 
+/**
+ * 使用生成dimens文件的UI适配
+ */
 public class UIAdaptSWActivity extends BaseActivity {
 
     @Override
