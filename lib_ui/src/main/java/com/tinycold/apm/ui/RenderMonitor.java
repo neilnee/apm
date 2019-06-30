@@ -8,7 +8,7 @@ import android.util.Printer;
 import androidx.annotation.NonNull;
 
 /**
- * 卡顿监控
+ * 渲染监控
  */
 public class RenderMonitor {
     /**
