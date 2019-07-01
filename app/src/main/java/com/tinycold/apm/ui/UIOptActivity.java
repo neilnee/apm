@@ -6,7 +6,6 @@ import android.view.View;
 import android.widget.Button;
 
 import com.tinycold.apm.BaseActivity;
-import com.tinycold.apm.MainActivity;
 import com.tinycold.apm.R;
 
 /**
@@ -45,7 +44,7 @@ public class UIOptActivity extends BaseActivity implements View.OnClickListener 
                 break;
             }
             case R.id.btn_caton_monitor: {
-                startActivity(new Intent(UIOptActivity.this, UICatonActivity.class));
+                startActivity(new Intent(UIOptActivity.this, UIRenderActivity.class));
                 break;
             }
         }

@@ -4,8 +4,13 @@ import android.os.Handler;
 import android.os.HandlerThread;
 import android.os.Looper;
 import android.util.Printer;
+import android.view.Choreographer;
 
 import androidx.annotation.NonNull;
+
+import com.tinycold.tool.TCLog;
+
+import java.util.Locale;
 
 /**
  * 渲染监控
@@ -26,7 +31,7 @@ public class RenderMonitor {
     private static int mCatonWay = 0;
 
     // 帧率监控相关
-    private static final FrameSummary mFrameSummary = new FrameSummary();
+    private static FrameChecker mFrameChecker = null;
 
     /**
      * 启动卡顿监控
@@ -51,6 +56,9 @@ public class RenderMonitor {
 
                     @Override
                     public void println(String s) {
+                        if (mCatonChecker == null) {
+                            return;
+                        }
                         if (s.startsWith(START)) {
                             mCatonChecker.start();
                         } else if (s.startsWith(FINISH)) {
@@ -100,14 +108,20 @@ public class RenderMonitor {
      * 启动帧率监控
      */
     public static void monitorFrame() {
-
+        if (mFrameChecker == null) {
+            mFrameChecker = new FrameChecker();
+        }
+        mFrameChecker.start();
     }
 
     /**
      * 停止帧率监控
      */
     public static void endFrame() {
-
+        if (mFrameChecker != null) {
+            mFrameChecker.stop();
+            mFrameChecker = null;
+        }
     }
 
     private static abstract class CatonChecker {
@@ -225,6 +239,44 @@ public class RenderMonitor {
         public void end() {
             isInterrupt = true;
             mSummary = null;
+        }
+
+    }
+
+    private static class FrameChecker implements Choreographer.FrameCallback {
+        private boolean isPosting = false;
+        private boolean isInterrupt = false;
+        private long mLastFrameTime = 0;
+        private float mFPS = 0.0F;
+
+        @Override
+        public void doFrame(long l) {
+            if (mLastFrameTime > 0) {
+                mFPS = 1000000000F / (l - mLastFrameTime);
+                TCLog.debug(String.format(Locale.getDefault(), "FPS [%f]", mFPS));
+            }
+            mLastFrameTime = l;
+            isPosting = false;
+            posting();
+        }
+
+        public void start() {
+            mLastFrameTime = 0;
+            isInterrupt = false;
+            posting();
+        }
+
+        public void stop() {
+            mLastFrameTime = 0;
+            isInterrupt = true;
+        }
+
+        private void posting() {
+            if (isPosting || isInterrupt) {
+                return;
+            }
+            isPosting = true;
+            Choreographer.getInstance().postFrameCallback(this);
         }
 
     }

@@ -14,7 +14,7 @@ import java.util.Random;
 /**
  * UI卡顿监控
  */
-public class UICatonActivity extends BaseActivity implements View.OnClickListener {
+public class UIRenderActivity extends BaseActivity implements View.OnClickListener {
 
     private final Random mRandom = new Random();
 
@@ -27,11 +27,15 @@ public class UICatonActivity extends BaseActivity implements View.OnClickListene
         Button btnEnd = findViewById(R.id.btn_ui_caton_end);
         Button btnFake = findViewById(R.id.btn_ui_caton_fake);
         Button btnSummary = findViewById(R.id.btn_ui_caton_summary);
+        Button btnFrameStart = findViewById(R.id.btn_ui_frame_start);
+        Button btnFrameEnd = findViewById(R.id.btn_ui_frame_end);
 
         btnStart.setOnClickListener(this);
         btnEnd.setOnClickListener(this);
         btnFake.setOnClickListener(this);
         btnSummary.setOnClickListener(this);
+        btnFrameStart.setOnClickListener(this);
+        btnFrameEnd.setOnClickListener(this);
     }
 
     @Override
@@ -69,6 +73,14 @@ public class UICatonActivity extends BaseActivity implements View.OnClickListene
             case R.id.btn_ui_caton_summary: {
                 TCLog.debug(String.format(Locale.getDefault(), "卡顿次数: %d; 卡顿时长: %d",
                         RenderMonitor.catonSummary().times(), RenderMonitor.catonSummary().duration()));
+                break;
+            }
+            case R.id.btn_ui_frame_start: {
+                RenderMonitor.monitorFrame();
+                break;
+            }
+            case R.id.btn_ui_frame_end: {
+                RenderMonitor.endFrame();
                 break;
             }
         }
