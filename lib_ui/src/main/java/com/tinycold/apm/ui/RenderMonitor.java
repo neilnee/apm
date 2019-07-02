@@ -243,6 +243,8 @@ public class RenderMonitor {
 
     }
 
+
+    //TODO 定义帧率监控的掉帧、冻帧区分及回调；增加仅在界面存在绘制时统计逻辑
     private static class FrameChecker implements Choreographer.FrameCallback {
         private boolean isPosting = false;
         private boolean isInterrupt = false;
