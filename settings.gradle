@@ -1,1 +1,1 @@
-include ':app', ':lib_tool_sw', ':lib_ui', ':lib_tool'
+include ':app', ':lib_tool_sw', ':lib_ui', ':lib_tool', ':lib_pfm', ':lib_net', ':lib_io', ':lib_storage', ':lib_stat', ':lib_hook'
